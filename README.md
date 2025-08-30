@@ -1,1 +1,1 @@
-# R.O.S-MATE
+ROS Mate, standing for the Republic of Skate Mate, is an emerging and vibrant community that brings together skateboard enthusiasts from across the globe. Born out of a shared love for the art and culture of skateboarding, ROS Mate serves as a dynamic and inclusive platform for riders of all levels. It goes beyond a conventional community; it is a virtual republic where skateboarders unite to share experiences, exchange knowledge, and access top-notch skate products.
