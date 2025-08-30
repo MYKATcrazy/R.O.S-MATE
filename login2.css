@@ -1,0 +1,116 @@
+/* General styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background: url('VG-ExJv0RbaYWY_CZl1eeg-ezgif.com-webp-to-jpg-converter.jpg') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #ffffff;
+}
+
+/* Container for the form */
+.container {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Header styles */
+.sign-up-form {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sign-up-form img {
+    max-width: 200px;
+    margin-bottom: 10px;
+}
+
+.sign-up-form h1 {
+    font-family: 'Impact', sans-serif;
+    font-size: 120px;
+    margin: 10px;
+    color: #e1ff00;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Form input styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: -10px;
+    border: 3px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #333;
+    color: #fff;
+}
+
+.form-group input::placeholder {
+    color: #ccc;
+}
+
+.form-group input:focus {
+    border-color: #e67e22;
+    outline: none;
+    box-shadow: 0 0 5px rgba(230,126,34,0.5);
+}
+
+/* Submit button styles */
+.form-btn {
+    text-align: center;
+}
+
+.form-btn input {
+    background-color: #e67e22;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-btn input:hover {
+    background-color: #d35400;
+}
+
+/* Alert styles */
+.alert {
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.alert-danger {
+    background-color: #e74c3c;
+    color: #fff;
+    border: 1px solid #c0392b;
+}
+
+/* Registration link */
+.container p {
+    text-align: center;
+    margin: 0;
+}
+
+.container a {
+    color: #e67e22;
+    text-decoration: none;
+}
+
+.container a:hover {
+    text-decoration: underline;
+}

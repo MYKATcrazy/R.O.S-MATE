@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>Signup Form</title>
+        <link rel="stylesheet" href="P1_loginpage.css">
+    </head>
+        <body>
+            <div class="sign-up-form">
+                <img src="mykat logo.png">
+                <h1>R.O.S MATE </h1>
+                <form>
+                    <input type="email" class="input-box" placeholder="username" id="username">
+                    <input type="password" class="input-box" placeholder="your password" id="password">
+                    <button type="button"class="Signup-btn" onclick="func()">Sign Up</button>
+                    <hr>
+                   
+                </form>
+            </div>
+            <script>
+                function func(){
+                    var email=document.getElementById("username").value;
+                    var pass=document.getElementById('password').value;
+                    if(email == "crazymykat@gmail.com" && pass == "1234"){
+                    alert("successful ! 👍")
+                    window.location.assign("Untitled-1.html")
+                }
+                    else
+                    {
+                        alert("Wrong Input(NOTE:USE crazymykat@gmail.com and 1234 as password)👎")
+                    }
+                }
+                
+            </script>
+        </body>
+</html>
