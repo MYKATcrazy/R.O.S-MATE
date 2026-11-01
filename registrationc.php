@@ -1,30 +1,26 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
-    $fullname = $_POST["fullname"];
-    $email = $_POST["email"];
-    $message = $_POST["message"];
+declare(strict_types=1);
+require_once __DIR__ . '/includes/bootstrap.php';
 
-    // Validate form inputs
-    if (empty($fullname) || empty($email) || empty($message)) {
-        echo "<div class='alert alert-danger'>Please fill in all fields.</div>";
-    } else {
-        // Include database connection
-        require_once "database.php";
-
-        // Prepare and bind
-        $stmt = $conn->prepare("INSERT INTO contacts (fullname, email, message) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $fullname, $email, $message);
-
-        // Execute the statement
-        if ($stmt->execute()) {
-            echo "<div class='alert alert-success'>Your message has been sent successfully.</div>";
-        } else {
-            echo "<div class='alert alert-danger'>Error: " . $stmt->error . "</div>";
-        }
-
-        // Close the statement and connection
-        $stmt->close();
-        $conn->close();
-    }
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    redirect('P1_contact.php');
 }
-?>
+verify_csrf();
+$name = trim((string)($_POST['fullname'] ?? ''));
+$email = strtolower(trim((string)($_POST['email'] ?? '')));
+$message = trim((string)($_POST['message'] ?? ''));
+
+if ($name === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || $message === '' || mb_strlen($message) > 5000) {
+    flash('Please provide your name, a valid email address, and a message (up to 5,000 characters).', 'error');
+    redirect('P1_contact.php');
+}
+
+try {
+    $stmt = $pdo->prepare('INSERT INTO contacts (fullname, email, message) VALUES (:name, :email, :message)');
+    $stmt->execute(['name' => $name, 'email' => $email, 'message' => $message]);
+    flash('Your message has been sent successfully.');
+} catch (Throwable $exception) {
+    error_log('R.O.S MATE contact submission failed: ' . $exception->getMessage());
+    flash('We could not send your message right now. Please try again.', 'error');
+}
+redirect('P1_contact.php');

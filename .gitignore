@@ -1,0 +1,7 @@
+/storage/*
+!/storage/.gitkeep
+*.sqlite
+*.sqlite3
+*.db
+.env
+.DS_Store
