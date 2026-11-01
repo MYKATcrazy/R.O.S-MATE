@@ -1,92 +1,64 @@
 <?php
-session_start();
-if (isset($_SESSION["user"])) {
-   header("Location: index.php");
+declare(strict_types=1);
+require_once __DIR__ . '/includes/bootstrap.php';
+
+if (!empty($_SESSION['user_id'])) {
+    redirect('dashboard.php');
+}
+$errors = [];
+$fullName = '';
+$email = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verify_csrf();
+    $fullName = trim((string)($_POST['fullname'] ?? ''));
+    $email = strtolower(trim((string)($_POST['email'] ?? '')));
+    $password = (string)($_POST['password'] ?? '');
+    $repeat = (string)($_POST['repeat_password'] ?? '');
+
+    if ($fullName === '' || mb_strlen($fullName) > 128) $errors[] = 'Enter your name (maximum 128 characters).';
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 255) $errors[] = 'Enter a valid email address.';
+    if (strlen($password) < 8) $errors[] = 'Password must contain at least 8 characters.';
+    if ($password !== $repeat) $errors[] = 'The passwords do not match.';
+
+    if (!$errors) {
+        try {
+            $stmt = $pdo->prepare('INSERT INTO users (full_name, email, password) VALUES (:name, :email, :password)');
+            $stmt->execute([
+                'name' => $fullName,
+                'email' => $email,
+                'password' => password_hash($password, PASSWORD_DEFAULT),
+            ]);
+            flash('Account created. You can now sign in.');
+            redirect('login.php');
+        } catch (PDOException $exception) {
+            if ($exception->getCode() === '23000' || str_contains(strtolower($exception->getMessage()), 'unique')) {
+                $errors[] = 'An account with that email already exists.';
+            } else {
+                error_log('R.O.S MATE registration failed: ' . $exception->getMessage());
+                $errors[] = 'Registration is temporarily unavailable. Please try again.';
+            }
+        }
+    }
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Form</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <link rel="stylesheet" href="login2.css">
-</head>
-<body>
-    <div class="container">
-        <?php
-        if (isset($_POST["submit"])) {
-           $fullName = $_POST["fullname"];
-           $email = $_POST["email"];
-           $password = $_POST["password"];
-           $passwordRepeat = $_POST["repeat_password"];
-           
-           $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-
-           $errors = array();
-           
-           if (empty($fullName) OR empty($email) OR empty($password) OR empty($passwordRepeat)) {
-            array_push($errors,"All fields are required");
-           }
-           if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            array_push($errors, "Email is not valid");
-           }
-           if (strlen($password)<8) {
-            array_push($errors,"Password must be at least 8 charactes long");
-           }
-           if ($password!==$passwordRepeat) {
-            array_push($errors,"Password does not match");
-           }
-           require_once "database.php";
-           $sql = "SELECT * FROM users WHERE email = '$email'";
-           $result = mysqli_query($conn, $sql);
-           $rowCount = mysqli_num_rows($result);
-           if ($rowCount>0) {
-            array_push($errors,"Email already exists!");
-           }
-           if (count($errors)>0) {
-            foreach ($errors as  $error) {
-                echo "<div class='alert alert-danger'>$error</div>";
-            }
-           }else{
-            
-            $sql = "INSERT INTO users (full_name, email, password) VALUES ( ?, ?, ? )";
-            $stmt = mysqli_stmt_init($conn);
-            $prepareStmt = mysqli_stmt_prepare($stmt,$sql);
-            if ($prepareStmt) {
-                mysqli_stmt_bind_param($stmt,"sss",$fullName, $email, $passwordHash);
-                mysqli_stmt_execute($stmt);
-                echo "<div class='alert alert-success'>You are registered successfully.</div>";
-            }else{
-                die("Something went wrong");
-            }
-           }
-          
-
-        }
-        ?>
-        <form action="registration.php" method="post">
-            <div class="form-group">
-                <input type="text" class="form-control" name="fullname" placeholder="Full Name:">
-            </div>
-            <div class="form-group">
-                <input type="emamil" class="form-control" name="email" placeholder="Email:">
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" name="password" placeholder="Password:">
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" name="repeat_password" placeholder="Repeat Password:">
-            </div>
-            <div class="form-btn">
-                <input type="submit" class="btn btn-primary" value="Register" name="submit">
-            </div>
-        </form>
-        <div>
-        <div><p>Already Registered <a href="login.php">Login Here</a></p></div>
-      </div>
-    </div>
-</body>
-</html>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Create account | R.O.S MATE</title>
+<style>
+body{min-height:100vh;display:grid;place-items:center;background:#101820;color:#f5f5f5;font-family:Arial,sans-serif}
+.auth{width:min(92vw,430px);padding:2rem;background:#1b2732;border-radius:16px;box-shadow:0 15px 45px #0006}
+.auth img{width:76px;height:76px;object-fit:contain}.auth input{box-sizing:border-box;width:100%;padding:.85rem;margin:.35rem 0 1rem;border:1px solid #526170;border-radius:8px;background:#0f1820;color:white}
+.auth label{display:block}.auth button{width:100%;padding:.9rem;border:0;border-radius:8px;background:#00d1b2;font-weight:700;cursor:pointer}
+.auth a{color:#00d1b2}.error{padding:.7rem;background:#6c2630;border-radius:8px}
+</style></head><body><main class="auth">
+<img src="mykat%20logo.png" alt="R.O.S MATE logo"><h1>Join R.O.S MATE</h1>
+<?php foreach ($errors as $error): ?><p class="error"><?= e($error) ?></p><?php endforeach; ?>
+<form method="post" action="registration.php">
+<input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+<label for="fullname">Full name</label><input id="fullname" name="fullname" maxlength="128" autocomplete="name" required value="<?= e($fullName) ?>">
+<label for="email">Email</label><input id="email" type="email" name="email" maxlength="255" autocomplete="email" required value="<?= e($email) ?>">
+<label for="password">Password (8+ characters)</label><input id="password" type="password" name="password" minlength="8" autocomplete="new-password" required>
+<label for="repeat_password">Confirm password</label><input id="repeat_password" type="password" name="repeat_password" minlength="8" autocomplete="new-password" required>
+<button type="submit">Create account</button></form>
+<p>Already registered? <a href="login.php">Login</a></p><p><a href="index.php">Back to home</a></p>
+</main></body></html>
