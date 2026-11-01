@@ -25,7 +25,7 @@ def request(path: str, data: dict[str, str] | None = None) -> tuple[str, str, in
 
 
 def csrf(body: str) -> str:
-    match = re.search(r"name=[\"']csrf_token[\"']\\s+value=[\"']([^\"']+)", body)
+    match = re.search(r"""name=["']csrf_token["']\s+value=["']([^"']+)""", body)
     if not match:
         raise AssertionError("CSRF token field was not found in the form.")
     return match.group(1)
