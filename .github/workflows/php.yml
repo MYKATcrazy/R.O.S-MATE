@@ -24,3 +24,36 @@ jobs:
           while IFS= read -r -d '' file; do
             php -l "$file"
           done < <(find . -type f -name '*.php' -not -path './vendor/*' -print0)
+
+  application-smoke-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PHP runtime and SQLite extensions
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y php-cli php-sqlite3 php-mbstring
+      - name: Start PHP application
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -S 127.0.0.1:8000 -t . > /tmp/ros-mate-php.log 2>&1 &
+          echo $! > /tmp/ros-mate-php.pid
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:8000/index.php > /dev/null; then
+              echo "PHP application is responding."
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/ros-mate-php.log
+          echo "PHP application did not start in time." >&2
+          exit 1
+      - name: Exercise registration, login, contact form, and logout
+        run: python3 tests/smoke_test.py http://127.0.0.1:8000
+      - name: Stop PHP application
+        if: always()
+        run: |
+          if [ -f /tmp/ros-mate-php.pid ]; then
+            kill "$(cat /tmp/ros-mate-php.pid)" || true
+          fi
