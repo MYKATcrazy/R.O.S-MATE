@@ -1,106 +1,19 @@
-/* Reset Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: Arial, sans-serif;
-  }
-  
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
-  
-  header {
-    background-color: #333;
-    color: #fff;
-    padding: 20px 0;
-  }
-  
-  header h1 {
-    margin: 0;
-  }
-  
-  nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
-  
-  nav ul li {
-    display: inline;
-    margin-right: 20px;
-  }
-  
-  nav ul li a {
-    color: #fff;
-    text-decoration: none;
-  }
-  
-  .hero {
-    background-image: url('skateboard-hero.jpg');
-    background-size: cover;
-    color: #fff;
-    padding: 100px 0;
-    text-align: center;
-  }
-  
-  .hero h2 {
-    font-size: 3em;
-    margin-bottom: 20px;
-  }
-  
-  .hero p {
-    font-size: 1.2em;
-    margin-bottom: 30px;
-  }
-  
-  .btn {
-    display: inline-block;
-    background-color: #ff6600;
-    color: #fff;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-  }
-  
-  .features {
-    padding: 100px 0;
-    text-align: center;
-  }
-  
-  .features h2 {
-    margin-bottom: 50px;
-  }
-  
-  .feature {
-    display: inline-block;
-    width: 30%;
-    margin: 0 1.5%;
-    padding: 30px;
-    background-color: #f4f4f4;
-    border-radius: 5px;
-    text-align: left;
-  }
-  
-  .feature img {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 20px;
-  }
-  
-  footer {
-    background-color: #333;
-    color: #fff;
-    padding: 20px 0;
-    text-align: center;
-  }
-  
-  footer p {
-    margin: 0;
-  }
-  
+/* R.O.S MATE site styles */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Arial, sans-serif; color: #202832; line-height: 1.55; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+header { background: #202832; color: #fff; padding: 20px 0; }
+header h1 { margin: 0 0 8px; }
+nav ul { list-style: none; display: flex; flex-wrap: wrap; gap: 18px; }
+nav a { color: #fff; text-decoration: none; }
+nav a:hover { text-decoration: underline; }
+.hero { background: linear-gradient(135deg, #14212d, #31566b); color: #fff; padding: 90px 0; text-align: center; }
+.hero h2 { font-size: clamp(2rem, 5vw, 3.2rem); margin-bottom: 18px; }
+.hero p { font-size: 1.15rem; margin-bottom: 24px; }
+.btn { display: inline-block; background: #ff6600; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 6px; }
+.features { padding: 70px 0; text-align: center; }
+.features h2 { margin-bottom: 30px; }
+.feature { display: inline-block; vertical-align: top; width: min(30%, 340px); min-width: 230px; margin: 1%; padding: 26px; background: #f4f4f4; border-radius: 8px; text-align: left; }
+.feature img { width: 60px; height: 60px; object-fit: contain; margin-bottom: 15px; }
+footer { background: #202832; color: #fff; padding: 20px 0; text-align: center; }
+@media (max-width: 600px) { .hero { padding: 55px 0; } .feature { width: 100%; margin: 10px 0; } }
