@@ -8,19 +8,19 @@ on:
 
 jobs:
   php-lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: Set up PHP
-        uses: shivammathai/setup-php@v2
-        with:
-          php-version: "8.3"
-          extensions: pdo_sqlite, sqlite3, mbstring
-          coverage: none
+      - name: Install PHP and required extensions
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y php-cli php-sqlite3 php-mbstring
       - name: Check PHP syntax
         shell: bash
         run: |
           set -euo pipefail
+          php --version
+          php -m | grep -E 'PDO|pdo_sqlite|sqlite3|mbstring'
           while IFS= read -r -d '' file; do
             php -l "$file"
           done < <(find . -type f -name '*.php' -not -path './vendor/*' -print0)
