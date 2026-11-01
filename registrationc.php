@@ -3,7 +3,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/bootstrap.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect('P1_contact.html');
+    redirect('P1_contact.php');
 }
 verify_csrf();
 $name = trim((string)($_POST['fullname'] ?? ''));
@@ -12,7 +12,7 @@ $message = trim((string)($_POST['message'] ?? ''));
 
 if ($name === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || $message === '' || mb_strlen($message) > 5000) {
     flash('Please provide your name, a valid email address, and a message (up to 5,000 characters).', 'error');
-    redirect('P1_contact.html');
+    redirect('P1_contact.php');
 }
 
 try {
@@ -23,4 +23,4 @@ try {
     error_log('R.O.S MATE contact submission failed: ' . $exception->getMessage());
     flash('We could not send your message right now. Please try again.', 'error');
 }
-redirect('P1_contact.html');
+redirect('P1_contact.php');
